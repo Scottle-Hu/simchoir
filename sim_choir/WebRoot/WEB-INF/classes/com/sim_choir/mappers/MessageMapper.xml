@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sim_choir.dao.MessageDao">
+	<!-- 返回的结果集 -->
+	<resultMap type="Message" id="MessageResult">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="email" column="email" />
+		<result property="phone" column="phone" />
+		<result property="message" column="message" />
+		<result property="state" column="state" />
+		<result property="date" column="date" />
+	</resultMap>
+
+	<select id="findAll" resultMap="MessageResult">
+		SELECT * FROM t_message WHERE
+		state!=0 ORDER BY id DESC
+	</select>
+
+	<select id="findById" parameterType="Integer" resultType="Message">
+		SELECT
+		* FROM t_message
+		WHERE id=#{id} AND state!=0 ORDER BY id DESC
+	</select>
+
+	<insert id="add" parameterType="Message">
+		INSERT INTO t_message VALUES
+		(null,#{name},#{email},#{phone},#{message},1,#{date})
+	</insert>
+
+	<select id="findAlready" resultMap="MessageResult">
+		SELECT * FROM t_message WHERE
+		state=2 ORDER BY id DESC
+	</select>
+
+	<select id="findNumOfAlready" resultType="Integer">
+		SELECT COUNT(*) FROM
+		t_message WHERE state=2
+	</select>
+
+	<select id="findWait" resultMap="MessageResult">
+		SELECT * FROM t_message WHERE
+		state=1 ORDER BY id DESC
+	</select>
+
+	<select id="findNumOfWait" resultType="Integer">
+		SELECT COUNT(*) FROM
+		t_message WHERE state=1
+	</select>
+
+	<update id="read" parameterType="Integer">
+		UPDATE t_message SET state=2
+		WHERE id=#{id} AND state=1
+	</update>
+
+	<update id="delete" parameterType="Integer">
+		UPDATE t_message SET state=0
+		WHERE id=#{id}
+	</update>
+
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sim_choir.dao.AlbumDao">
+	<!-- 返回集合 -->
+	<resultMap type="Album" id="AlbumResult">
+		<id property="id" column="id" />
+		<result property="date" column="date" />
+		<result property="name" column="name" />
+		<result property="description" column="description" />
+		<result property="count" column="count" />
+		<association property="pics" column="id"
+			select="com.sim_choir.dao.PictureDao.findByAlbum" />
+	</resultMap>
+
+	<!-- 获取所有相册 -->
+	<select id="findAll" resultMap="AlbumResult">
+		SELECT * FROM t_album WHERE
+		state=1
+	</select>
+
+	<!-- 按id获取相册 -->
+	<select id="findById" resultMap="AlbumResult" parameterType="Integer">
+		SELECT * from t_album WHERE state=1 AND id=#{id}
+	</select>
+
+	<!-- 添加相册 -->
+	<insert id="add" parameterType="Album">
+		INSERT INTO t_album VALUES
+		(null,#{date},#{name},#{description},1,0)
+	</insert>
+
+	<!-- 删除相册 以及相应的图片,state置为零 -->
+	<update id="deleteAlbum" parameterType="Integer">
+		UPDATE t_album SET
+		state=0 WHERE id=#{id}
+	</update>
+
+	<!-- 修改相册名称 -->
+	<update id="updateAlbumName" parameterType="Album">
+		UPDATE t_album SET
+		name=#{name} WHERE state=1 AND id=#{id}
+	</update>
+	
+	<!-- 修改相册描述 -->
+	<update id="updateAlbumDesc" parameterType="Album">
+		UPDATE t_album SET
+		description=#{description} WHERE state=1 AND id=#{id}
+	</update>
+
+
+</mapper>

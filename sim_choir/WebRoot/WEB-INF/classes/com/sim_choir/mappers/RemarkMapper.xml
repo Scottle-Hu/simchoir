@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sim_choir.dao.RemarkDao">
+	<!-- 结果集合 -->
+	<resultMap type="Remark" id="RemarkResult">
+		<id property="id" column="id" />
+		<result property="isNews" column="isNews" />
+		<result property="itemId" column="itemId" />
+		<result property="ip" column="ip" />
+		<result property="content" column="content" />
+		<result property="date" column="date" />
+		<association property="songName" column="itemId"
+			select="com.sim_choir.dao.SongDao.findNameByRemark" />
+		<association property="newsTittle" column="itemId"
+			select="com.sim_choir.dao.NewsDao.findTittleByRemark" />
+	</resultMap>
+
+	<!-- 找到某条动态的所有评论 -->
+	<select id="findNewsRemark" parameterType="Integer" resultMap="RemarkResult">
+		SELECT * FROM t_remark WHERE isNews=1 AND state=1 AND itemId=#{id}
+	</select>
+
+	<!-- 找到某个歌曲的所有评论 -->
+	<select id="findSongRemark" parameterType="Integer" resultMap="RemarkResult">
+		SELECT * FROM t_remark WHERE isNews=0 AND state=1 AND itemId=#{id}
+	</select>
+
+	<!-- 插入 -->
+	<insert id="addRemark" parameterType="Remark">
+		INSERT INTO t_remark VALUES
+		(null,#{isNews},#{itemId},#{ip},#{content},#{date},1)
+	</insert>
+
+	<!-- 获取所有评论 -->
+	<select id="findAllRemark" resultMap="RemarkResult">
+		SELECT * FROM t_remark
+		WHERE state=1
+	</select>
+
+	<!-- 获取所有歌曲评论 -->
+	<select id="findAllSongRemark" resultMap="RemarkResult">
+		SELECT * FROM t_remark
+		WHERE state=1 AND isNews=0
+	</select>
+
+	<!-- 获取所有新闻评论 -->
+	<select id="findAllNewsRemark" resultMap="RemarkResult">
+		SELECT * FROM t_remark
+		WHERE state=1 AND isNews=1
+	</select>
+
+	<!-- 删除 -->
+	<update id="deleteRemark" parameterType="Integer">
+		UPDATE t_remark SET
+		state=0 WHERE id=#{id}
+	</update>
+</mapper>

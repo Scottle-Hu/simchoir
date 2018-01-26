@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sim_choir.dao.PictureDao">
+	<!-- 返回集合 -->
+	<resultMap type="Picture" id="PictureResult">
+		<id property="id" column="id" />
+		<result property="pic" column="pic" />
+		<result property="tittle" column="tittle" />
+		<result property="date" column="date" />
+		<result property="albumId" column="albumId" />
+	</resultMap>
+
+	<!-- 获取所有图片 -->
+	<select id="findAll" resultMap="PictureResult">
+		SELECT * FROM t_picture WHERE
+		state=1
+	</select>
+
+	<!-- 按相册获取图片 -->
+	<select id="findByAlbum" resultMap="PictureResult"
+		parameterType="Integer">
+		SELECT * from t_picture WHERE state=1 AND
+		albumId=#{albumId}
+	</select>
+
+	<!-- 按照id获取 -->
+	<select id="findById" parameterType="Integer" resultType="Picture">
+		SELECT
+		* FROM t_picture WHERE state=1 AND id=#{id}
+	</select>
+
+	<!-- 添加图片 -->
+	<insert id="add" parameterType="Picture">
+		INSERT INTO t_picture VALUES
+		(null,#{pic},#{tittle},#{date},1,#{albumId})
+	</insert>
+
+	<!-- 按照id删除图片 -->
+	<update id="delete" parameterType="Integer">
+		UPDATE t_picture SET state=0
+		WHERE id=#{id}
+	</update>
+
+
+</mapper>

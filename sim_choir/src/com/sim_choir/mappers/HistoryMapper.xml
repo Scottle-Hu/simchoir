@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sim_choir.dao.HistoryDao">
+	<!-- 返回的history集合 -->
+	<resultMap type="History" id="HistoryResult">
+		<id property="id" column="id" />
+		<result property="content" column="content" />
+		<result property="presentation" column="presentation" />
+		<result property="sdate" column="sdate" />
+		<result property="edate" column="edate" />
+	</resultMap>
+
+	<!-- 获取所有记录 -->
+	<select id="findAll" resultMap="HistoryResult">
+		SELECT * FROM t_history WHERE
+		state=1 ORDER BY id DESC
+	</select>
+
+	<!-- 按id获取记录 -->
+	<select id="findById" resultType="History" parameterType="Integer">
+		SELECT
+		* FROM t_history WHERE state=1 AND id=#{id}
+	</select>
+
+	<!-- 添加纪录 -->
+	<insert id="add" parameterType="History">
+		INSERT INTO t_history VALUES
+		(null,#{sdate},#{edate},#{content},#{presentation},1)
+	</insert>
+
+	<!-- 删除记录 -->
+	<update id="delete" parameterType="Integer">
+		UPDATE t_history SET state=0
+		WHERE id=#{id}
+	</update>
+
+</mapper>

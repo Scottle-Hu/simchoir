@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sim_choir.dao.AnnouncementDao">
+	<!-- 查询的公告结果集 -->
+	<resultMap type="Announcement" id="AnnouncementResult">
+		<id property="id" column="id" />
+		<result property="date" column="date" />
+		<result property="tittle" column="tittle" />
+		<result property="content" column="content" />
+		<association property="admin" column="adminId"
+			select="com.sim_choir.dao.AdminDao.findById" />
+	</resultMap>
+
+	<!-- 查询所有公告 -->
+	<select id="findAll" resultMap="AnnouncementResult">
+		SELECT * FROM t_announcement
+		a,t_admin b WHERE a.adminId=b.id AND a.state=1
+	</select>
+
+	<!-- 按id查询 -->
+	<select id="findById" resultMap="AnnouncementResult"
+		parameterType="Integer">
+		SELECT * FROM t_announcement a,t_admin b WHERE
+		a.adminId=b.id AND
+		a.state=1 AND a.id=#{id}
+	</select>
+
+	<!-- 添加记录 -->
+	<insert id="add" parameterType="Announcement">
+		INSERT INTO t_announcement VALUES
+		(null,#{date},#{tittle},#{content},#{admin.id},1)
+	</insert>
+
+	<!-- 删除 -->
+	<update id="delete" parameterType="Integer">
+		UPDATE t_announcement SET
+		state=0 WHERE id=#{id}
+	</update>
+
+	<!-- 修改标题 -->
+	<update id="updateTittle" parameterType="Announcement">
+		UPDATE t_announcement
+		SET tittle=#{tittle} WHERE id=#{id}
+	</update>
+	
+	<!-- 修改内容 -->
+	<update id="updateContent" parameterType="Announcement">
+		UPDATE t_announcement
+		SET content=#{content} WHERE id=#{id}
+	</update>
+
+
+</mapper>

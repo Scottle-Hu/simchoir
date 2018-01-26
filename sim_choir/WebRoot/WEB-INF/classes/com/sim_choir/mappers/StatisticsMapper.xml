@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sim_choir.dao.StatisticsDao">
+
+	<insert id="add" parameterType="Statistics">
+		INSERT INTO t_statistics VALUES
+		(null,#{date},#{scanNum});
+	</insert>
+
+	<!-- 删除辅助记录 -->
+	<delete id="deteleHelp">
+		delete from t_statistics where scanNum=0
+	</delete>
+
+	<update id="updateDate" parameterType="java.sql.Date">
+		UPDATE t_statistics SET
+		scanNum=scanNum+1 WHERE date=#{date}
+	</update>
+
+	<select id="findPeriodNum" resultType="Integer">
+		SELECT SUM(scanNum) FROM
+		t_statistics WHERE date
+		BETWEEN #{param1} AND #{param2}
+	</select>
+
+	<select id="findAllNum" resultType="Integer">
+		SELECT SUM(scanNum) FROM
+		t_statistics
+	</select>
+
+</mapper>

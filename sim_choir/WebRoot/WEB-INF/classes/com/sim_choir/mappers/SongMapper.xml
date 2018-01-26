@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sim_choir.dao.SongDao">
+	<!-- 返回的歌曲集合 -->
+	<resultMap type="Song" id="SongResult">
+		<id property="id" column="id" />
+		<result property="isVideo" column="isVideo" />
+		<result property="name" column="name" />
+		<result property="introduction" column="introduction" />
+		<!-- <result property="content" column="content" /> -->
+		<result property="isLink" column="isLink" />
+		<result property="scanNum" column="scanNum" />
+		<result property="praiseNum" column="praiseNum" />
+		<association property="remarkList" column="id"
+			select="com.sim_choir.dao.RemarkDao.findSongRemark" />
+	</resultMap>
+
+	<!-- 插入歌曲 -->
+	<insert id="addSong" parameterType="Song">
+		INSERT INTO t_song VALUES
+		(null,#{isVideo},#{isLink},#{name},#{introduction},#{content},1,#{scanNum},#{praiseNum})
+	</insert>
+
+	<!-- 获取所有歌曲 -->
+	<select id="findAll" resultMap="SongResult">
+		SELECT
+		id,isVideo,isLink,name,introduction,content,state,scanNum,praiseNum
+		FROM t_song WHERE
+		state=1
+	</select>
+
+	<!-- 根据id获取歌曲 -->
+	<select id="findById" parameterType="Integer" resultMap="SongResult">
+		SELECT *
+		FROM t_song WHERE id=#{id} AND state=1
+	</select>
+
+	<!-- 歌曲点赞加一 -->
+	<update id="updatePraiseNum" parameterType="Integer">
+		UPDATE t_song SET
+		praiseNum=praiseNum+1 WHERE id=#{id}
+	</update>
+
+	<!-- 歌曲浏览加一 -->
+	<update id="updateScanNum" parameterType="Integer">
+		UPDATE t_song SET
+		scanNum=scanNum+1 WHERE id=#{id}
+	</update>
+
+	<!-- 删除歌曲，为了节省数据库空间，直接删除 -->
+	<delete id="deleteSong" parameterType="Integer">
+		DELETE FROM t_song WHERE
+		id=#{id}
+	</delete>
+
+	<!-- 通过评论的id反向获取歌曲名称 -->
+	<select id="findNameByRemark" parameterType="Integer" resultType="String">
+		SELECT name FROM
+		t_song WHERE state=1 AND id=#{id}
+	</select>
+
+</mapper>

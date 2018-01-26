@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sim_choir.dao.NewsDao">
+	<!-- 查询的动态结果集 -->
+	<resultMap type="News" id="NewsResult">
+		<id property="id" column="id" />
+		<result property="date" column="date" />
+		<result property="tittle" column="tittle" />
+		<result property="content" column="content" />
+		<result property="presentation" column="presentation" />
+		<result property="pic" column="pic" />
+		<result property="praiseNum" column="praiseNum" />
+		<result property="scanNum" column="scanNum" />
+		<association property="admin" column="adminId"
+			select="com.sim_choir.dao.AdminDao.findById" />
+		<collection property="remarkList" column="id"
+			select="com.sim_choir.dao.RemarkDao.findNewsRemark" />
+	</resultMap>
+
+	<!-- 查询所有记录 -->
+	<select id="findAll" resultMap="NewsResult">
+		SELECT * FROM t_news WHERE
+		state=1
+	</select>
+
+	<!-- id查询记录 -->
+	<select id="findById" resultMap="NewsResult" parameterType="Integer">
+		SELECT * FROM t_news WHERE state=1 AND id=#{id}
+	</select>
+
+	<!-- 添加动态 -->
+	<insert id="addNews" parameterType="News">
+		INSERT INTO t_news VALUES
+		(null,#{date},#{tittle},#{content},#{presentation},#{admin.id},1,#{pic},0,0)
+	</insert>
+
+	<!-- 删除 -->
+	<update id="delete" parameterType="Integer">
+		UPDATE t_news SET state=0
+		WHERE id=#{id}
+	</update>
+
+	<!-- 点赞 -->
+	<update id="updatePraiseNum" parameterType="Integer">
+		UPDATE t_news SET
+		praiseNum=praiseNum+1 WHERE id=#{id}
+	</update>
+
+	<!-- 浏览 -->
+	<update id="updateScanNum" parameterType="Integer">
+		UPDATE t_news SET
+		scanNum=scanNum+1 WHERE id=#{id}
+	</update>
+
+	<!-- 根据评论获取标题 -->
+	<select id="findTittleByRemark" parameterType="Integer"
+		resultType="String">
+		SELECT tittle FROM t_news WHERE state=1 AND id=#{id}
+	</select>
+
+
+</mapper>

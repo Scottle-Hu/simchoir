@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sim_choir.dao.MemberDao">
+
+	<!-- member类的返回集合 -->
+	<resultMap type="Member" id="MemberResult">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="grade" column="grade" />
+		<result property="part" column="part" />
+		<result property="photo" column="photo" />
+		<result property="previewOrder" column="previewOrder" />
+		<association property="major" column="majorId"
+			select="com.sim_choir.dao.MajorDao.findNameById" />
+		<association property="duty" column="dutyId"
+			select="com.sim_choir.dao.DutyDao.findNameById" />
+	</resultMap>
+
+	<!-- 查询所有 -->
+	<select id="findAll" resultMap="MemberResult">
+		SELECT * FROM t_member a,t_major
+		b,t_duty c WHERE a.majorId=b.id AND a.dutyId=c.id AND a.state=1
+	</select>
+
+	<!-- 根据id查找 -->
+	<select id="findById" resultType="Member" parameterType="Integer">
+		SELECT *
+		FROM t_member a,t_major
+		b,t_duty c WHERE a.majorId=b.id AND
+		a.dutyId=c.id AND a.state=1 AND a.id=#{id}
+	</select>
+
+	<!-- 根据previewOrder获取顺序成员列表 -->
+	<select id="findByPreview" resultMap="MemberResult">
+		SELECT * FROM t_member
+		a,t_major
+		b,t_duty c WHERE a.majorId=b.id AND a.dutyId=c.id AND
+		a.state=1 AND a.previewOrder!=0 ORDER BY a.previewOrder
+	</select>
+
+	<!-- 添加成员 -->
+	<insert id="addMember" parameterType="Member">
+		INSERT INTO t_member VALUES
+		(null,#{name},#{grade},#{majorId},#{part},#{dutyId},#{photo},1,#{previewOrder})
+	</insert>
+
+	<!-- 删除成员 -->
+	<update id="delete" parameterType="Integer">
+		UPDATE t_member SET state=0
+		WHERE id=#{id}
+	</update>
+
+	<!-- 修改姓名 -->
+	<update id="updateName" parameterType="Member">
+		UPDATE t_member SET
+		name=#{name} WHERE id=#{id} AND state=1
+	</update>
+
+	<!-- 修改职务 -->
+	<update id="updateDuty" parameterType="Member">
+		UPDATE t_member SET
+		dutyId=#{dutyId} WHERE id=#{id} AND state=1
+	</update>
+
+	<!-- 修改班级 -->
+	<update id="updateClass" parameterType="Member">
+		UPDATE t_member SET
+		grade=#{grade},majorId=#{majorId} WHERE id=#{id} AND state=1
+	</update>
+
+	<!-- 修改声部 -->
+	<update id="updatePart" parameterType="Member">
+		UPDATE t_member SET
+		part=#{part} WHERE id=#{id} AND state=1
+	</update>
+
+	<!-- 修改图片 -->
+	<update id="updatePic" parameterType="Member">
+		UPDATE t_member SET
+		photo=#{photo} WHERE id=#{id} AND state=1
+	</update>
+
+	<!-- 修改预览优先级 -->
+	<update id="updatePreviewOrder" parameterType="Member">
+		UPDATE t_member
+		SET
+		previewOrder=#{previewOrder} WHERE id=#{id} AND state=1
+	</update>
+
+</mapper>

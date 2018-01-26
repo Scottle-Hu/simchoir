@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sim_choir.dao.AdminDao">
+	<!-- 查询的结果集 -->
+	<resultMap type="Administrater" id="AdminResult">
+		<id property="id" column="id" />
+		<result property="username" column="username" />
+		<result property="password" column="password" />
+	</resultMap>
+
+	<!-- id查询记录 -->
+	<select id="findById" resultType="Administrater" parameterType="Integer">
+		SELECT * FROM t_admin WHERE state=1 AND id=#{id}
+	</select>
+	
+	<!-- 用户名查询结果 -->
+	<select id="findByName" parameterType="String" resultMap="AdminResult">
+		SELECT * FROM t_admin WHERE state=1 AND username=#{_parameter}
+	</select>
+	
+</mapper>

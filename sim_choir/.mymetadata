@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="sim_choir"
+  id="myeclipse.1493305976697"
+  context-root="/sim_choir"
+  j2ee-spec="5.0"
+  archive="sim_choir.war">
+  <attributes>
+    <attribute name="webrootdir" value="WebRoot" />
+  </attributes>
+</project-module>
+
