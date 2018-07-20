@@ -1,2 +1,2 @@
 # simchoir
-  - source code for www.simchoir.com
+  - source code for [simchoir](http://www.simchoir.com)
